@@ -66,3 +66,15 @@ void HELPER(honggfuzz_qemu_trace_cmp_i64)(
   }
 }
 
+void HELPER(honggfuzz_qemu_trace_cmp_i32)(
+        uint32_t cur_loc, uint32_t arg1, uint32_t arg2
+    ) {
+  uintptr_t pos = (uintptr_t)cur_loc % _HF_PERF_BITMAP_SIZE_16M;
+  register uint8_t v = ((sizeof(arg1) * 8) - __builtin_popcountll(arg1 ^ arg2));
+  uint8_t prev = ATOMIC_GET(feedback->bbMapCmp[pos]);
+  if (prev < v) {
+    ATOMIC_SET(feedback->bbMapCmp[pos], v);
+    ATOMIC_POST_ADD(feedback->pidFeedbackCmp[my_thread_no], v - prev);
+  }
+}
+

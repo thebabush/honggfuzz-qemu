@@ -1389,7 +1389,7 @@ static void gen_op(DisasContext *s1, int op, TCGMemOp ot, int d)
         tcg_gen_mov_tl(cpu_cc_src, s1->T1);
         tcg_gen_mov_tl(s1->cc_srcT, s1->T0);
         tcg_gen_sub_tl(cpu_cc_dst, s1->T0, s1->T1);
-        honggfuzz_qemu_gen_trace_cmp_i64(s1->T0, s1->T1);
+        honggfuzz_qemu_gen_trace_cmp_tl(s1->T0, s1->T1);
         set_cc_op(s1, CC_OP_SUBB + ot);
         break;
     }

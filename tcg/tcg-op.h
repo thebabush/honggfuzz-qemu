@@ -1310,5 +1310,12 @@ static inline void tcg_gen_trunc_ptr_i32(TCGv_i32 r, TCGv_ptr a)
 #undef NAT
 
 void honggfuzz_qemu_gen_trace_cmp_i64(TCGv_i64 arg1, TCGv_i64 arg2);
+void honggfuzz_qemu_gen_trace_cmp_i32(TCGv_i32 arg1, TCGv_i32 arg2);
+
+#if TARGET_LONG_BITS == 64
+#define honggfuzz_qemu_gen_trace_cmp_tl honggfuzz_qemu_gen_trace_cmp_i64
+#else
+#define honggfuzz_qemu_gen_trace_cmp_tl honggfuzz_qemu_gen_trace_cmp_i32
+#endif
 
 #endif /* TCG_TCG_OP_H */

@@ -3312,15 +3312,29 @@ GEN_ATOMIC_HELPER(xchg, mov2, 0)
 extern __thread target_ulong honggfuzz_qemu_instrumentation_address;
 
 void honggfuzz_qemu_gen_trace_cmp_i64(TCGv_i64 arg1, TCGv_i64 arg2) {
-  TCGv cur_loc;
+  TCGv_i64 cur_loc;
 
   if (!honggfuzz_qemu_instrumentation_address) {
     return;
   }
 
-  cur_loc = tcg_const_tl(honggfuzz_qemu_instrumentation_address);
+  cur_loc = tcg_const_i64(honggfuzz_qemu_instrumentation_address);
 
   gen_helper_honggfuzz_qemu_trace_cmp_i64(cur_loc, arg1, arg2);
 
-  tcg_temp_free(cur_loc);
+  tcg_temp_free_i64(cur_loc);
+}
+
+void honggfuzz_qemu_gen_trace_cmp_i32(TCGv_i32 arg1, TCGv_i32 arg2) {
+  TCGv_i32 cur_loc;
+
+  if (!honggfuzz_qemu_instrumentation_address) {
+    return;
+  }
+
+  cur_loc = tcg_const_i32(honggfuzz_qemu_instrumentation_address);
+
+  gen_helper_honggfuzz_qemu_trace_cmp_i32(cur_loc, arg1, arg2);
+
+  tcg_temp_free_i32(cur_loc);
 }
