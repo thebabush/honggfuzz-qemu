@@ -133,6 +133,7 @@ QEMU_CFLAGS+=-I$(SRC_PATH)/linux-user/$(TARGET_ABI_DIR) \
 
 obj-y += linux-user/
 obj-y += gdbstub.o thunk.o
+obj-y += fuzz/honggfuzz.o
 
 endif #CONFIG_LINUX_USER
 
@@ -205,7 +206,7 @@ endif
 COMMON_LDADDS = ../libqemuutil.a
 
 # build either PROG or PROGW
-$(QEMU_PROG_BUILD): $(all-obj-y) $(COMMON_LDADDS)
+$(QEMU_PROG_BUILD): $(all-obj-y) $(COMMON_LDADDS) $(HONGGFUZZ_PATH)/libhfcommon/libhfcommon.a
 	$(call LINK, $(filter-out %.mak, $^))
 ifdef CONFIG_DARWIN
 	$(call quiet-command,Rez -append $(SRC_PATH)/pc-bios/qemu.rsrc -o $@,"REZ","$(TARGET_DIR)$@")

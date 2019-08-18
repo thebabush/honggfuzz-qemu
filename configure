@@ -1013,6 +1013,10 @@ for opt do
   ;;
   --cpu=*)
   ;;
+  --honggfuzz-path=*)
+      honggfuzz_path="$optarg" ;
+      QEMU_INCLUDES="$QEMU_INCLUDES -I$honggfuzz_path" ;
+  ;;
   --target-list=*) target_list="$optarg"
                    if test "$target_list_exclude"; then
                        error_exit "Can't mix --target-list with --target-list-exclude"
@@ -1740,6 +1744,7 @@ Advanced options (experts only):
   --enable-profiler        profiler support
   --enable-debug-stack-usage
                            track the maximum stack usage of stacks created by qemu_alloc_stack
+  --honggfuzz-path=PATH    honggfuzz source directory
 
 Optional features, enabled with --enable-FEATURE and
 disabled with --disable-FEATURE, default is enabled if available:
@@ -7387,6 +7392,7 @@ if test "$gcov" = "yes" ; then
   echo "CONFIG_GCOV=y" >> $config_host_mak
   echo "GCOV=$gcov_tool" >> $config_host_mak
 fi
+echo "HONGGFUZZ_PATH=$honggfuzz_path" >> $config_host_mak
 
 if test "$docker" != "no"; then
     echo "HAVE_USER_DOCKER=y" >> $config_host_mak

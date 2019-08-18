@@ -23,6 +23,10 @@
 
 #define ELF_OSABI   ELFOSABI_SYSV
 
+abi_ulong honggfuzz_qemu_entry_point;
+abi_ulong honggfuzz_qemu_start_code;
+abi_ulong honggfuzz_qemu_end_code;
+
 /* from personality.h */
 
 /*
@@ -2389,6 +2393,10 @@ static void load_elf_image(const char *image_name, int image_fd,
     info->brk = 0;
     info->elf_flags = ehdr->e_flags;
 
+    if (!honggfuzz_qemu_entry_point) {
+      honggfuzz_qemu_entry_point = info->entry;
+    }
+
     for (i = 0; i < ehdr->e_phnum; i++) {
         struct elf_phdr *eppnt = phdr + i;
         if (eppnt->p_type == PT_LOAD) {
@@ -2431,9 +2439,16 @@ static void load_elf_image(const char *image_name, int image_fd,
             if (elf_prot & PROT_EXEC) {
                 if (vaddr < info->start_code) {
                     info->start_code = vaddr;
+                    if (!honggfuzz_qemu_start_code) {
+                      honggfuzz_qemu_start_code = vaddr;
+                    }
                 }
                 if (vaddr_ef > info->end_code) {
                     info->end_code = vaddr_ef;
+                    // TODO(babush): this works in AFL's qemu
+                    /*if (!honggfuzz_qemu_end_code) {*/
+                      honggfuzz_qemu_end_code = vaddr;
+                    /*}*/
                 }
             }
             if (elf_prot & PROT_WRITE) {

@@ -58,6 +58,10 @@
 #include "sysemu/cpus.h"
 #include "sysemu/tcg.h"
 
+#include "fuzz/honggfuzz.h"
+
+__thread target_ulong honggfuzz_qemu_instrumentation_address;
+
 /* #define DEBUG_TB_INVALIDATE */
 /* #define DEBUG_TB_FLUSH */
 /* make various TB consistency checks */
@@ -1735,7 +1739,15 @@ TranslationBlock *tb_gen_code(CPUState *cpu,
     tcg_func_start(tcg_ctx);
 
     tcg_ctx->cpu = env_cpu(env);
+    {
+      if (pc < honggfuzz_qemu_end_code && pc > honggfuzz_qemu_start_code) {
+        honggfuzz_qemu_instrumentation_address = pc;
+      }
+    }
     gen_intermediate_code(cpu, tb, max_insns);
+    {
+      honggfuzz_qemu_instrumentation_address = 0;
+    }
     tcg_ctx->cpu = NULL;
 
     trace_translate_block(tb, tb->pc, tb->tc.ptr);

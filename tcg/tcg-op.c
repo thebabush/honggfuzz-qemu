@@ -3308,3 +3308,19 @@ static void tcg_gen_mov2_i64(TCGv_i64 r, TCGv_i64 a, TCGv_i64 b)
 GEN_ATOMIC_HELPER(xchg, mov2, 0)
 
 #undef GEN_ATOMIC_HELPER
+
+extern __thread target_ulong honggfuzz_qemu_instrumentation_address;
+
+void honggfuzz_qemu_gen_trace_cmp_i64(TCGv_i64 arg1, TCGv_i64 arg2) {
+  TCGv cur_loc;
+
+  if (!honggfuzz_qemu_instrumentation_address) {
+    return;
+  }
+
+  cur_loc = tcg_const_tl(honggfuzz_qemu_instrumentation_address);
+
+  gen_helper_honggfuzz_qemu_trace_cmp_i64(cur_loc, arg1, arg2);
+
+  tcg_temp_free(cur_loc);
+}
