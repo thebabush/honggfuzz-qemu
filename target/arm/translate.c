@@ -8241,6 +8241,7 @@ static void disas_arm_insn(DisasContext *s, unsigned int insn)
                 gen_exception_return(s, tmp);
             } else {
                 if (set_cc) {
+                    honggfuzz_qemu_gen_trace_cmp_i32(tmp, tmp2);
                     gen_sub_CC(tmp, tmp, tmp2);
                 } else {
                     tcg_gen_sub_i32(tmp, tmp, tmp2);
@@ -8250,6 +8251,7 @@ static void disas_arm_insn(DisasContext *s, unsigned int insn)
             break;
         case 0x03:
             if (set_cc) {
+                honggfuzz_qemu_gen_trace_cmp_i32(tmp2, tmp);
                 gen_sub_CC(tmp, tmp2, tmp);
             } else {
                 tcg_gen_sub_i32(tmp, tmp2, tmp);
@@ -8304,6 +8306,8 @@ static void disas_arm_insn(DisasContext *s, unsigned int insn)
             break;
         case 0x0a:
             if (set_cc) {
+                // CMP
+                honggfuzz_qemu_gen_trace_cmp_i32(tmp, tmp2);
                 gen_sub_CC(tmp, tmp, tmp2);
             }
             tcg_temp_free_i32(tmp);
@@ -10970,6 +10974,7 @@ static void disas_thumb_insn(DisasContext *s, uint32_t insn)
             tcg_gen_movi_i32(tmp2, insn & 0xff);
             switch (op) {
             case 1: /* cmp */
+                honggfuzz_qemu_gen_trace_cmp_i32(tmp, tmp2);
                 gen_sub_CC(tmp, tmp, tmp2);
                 tcg_temp_free_i32(tmp);
                 tcg_temp_free_i32(tmp2);
@@ -10985,8 +10990,10 @@ static void disas_thumb_insn(DisasContext *s, uint32_t insn)
             case 3: /* sub */
                 if (s->condexec_mask)
                     tcg_gen_sub_i32(tmp, tmp, tmp2);
-                else
+                else {
+                    honggfuzz_qemu_gen_trace_cmp_i32(tmp, tmp2);
                     gen_sub_CC(tmp, tmp, tmp2);
+                }
                 tcg_temp_free_i32(tmp2);
                 store_reg(s, rd, tmp);
                 break;
@@ -11028,6 +11035,7 @@ static void disas_thumb_insn(DisasContext *s, uint32_t insn)
             case 1: /* cmp */
                 tmp = load_reg(s, rd);
                 tmp2 = load_reg(s, rm);
+                honggfuzz_qemu_gen_trace_cmp_i32(tmp, tmp2);
                 gen_sub_CC(tmp, tmp, tmp2);
                 tcg_temp_free_i32(tmp2);
                 tcg_temp_free_i32(tmp);
@@ -11186,6 +11194,7 @@ static void disas_thumb_insn(DisasContext *s, uint32_t insn)
                 gen_sub_CC(tmp, tmp, tmp2);
             break;
         case 0xa: /* cmp */
+            honggfuzz_qemu_gen_trace_cmp_i32(tmp, tmp2);
             gen_sub_CC(tmp, tmp, tmp2);
             rd = 16;
             break;

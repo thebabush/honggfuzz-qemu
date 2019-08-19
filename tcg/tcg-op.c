@@ -3318,7 +3318,8 @@ void honggfuzz_qemu_gen_trace_cmp_i64(TCGv_i64 arg1, TCGv_i64 arg2) {
     return;
   }
 
-  cur_loc = tcg_const_i64(honggfuzz_qemu_instrumentation_address);
+  // This is needed for colliding CMPs (?)
+  cur_loc = tcg_const_i64(honggfuzz_qemu_instrumentation_address++);
 
   gen_helper_honggfuzz_qemu_trace_cmp_i64(cur_loc, arg1, arg2);
 
@@ -3332,7 +3333,8 @@ void honggfuzz_qemu_gen_trace_cmp_i32(TCGv_i32 arg1, TCGv_i32 arg2) {
     return;
   }
 
-  cur_loc = tcg_const_i32(honggfuzz_qemu_instrumentation_address);
+  // This is needed for colliding CMPs (?)
+  cur_loc = tcg_const_i32(honggfuzz_qemu_instrumentation_address++);
 
   gen_helper_honggfuzz_qemu_trace_cmp_i32(cur_loc, arg1, arg2);
 
