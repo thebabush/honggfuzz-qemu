@@ -1555,6 +1555,11 @@ for opt do
   esac
 done
 
+if [ -z "$honggfuzz_path" ]; then
+    echo "Please run ./configure --honggfuzz-path=/path/to/hfuzz/"
+    exit 1
+fi
+
 case "$cpu" in
     ppc)
            CPU_CFLAGS="-m32"
