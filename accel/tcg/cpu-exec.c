@@ -38,7 +38,7 @@
 #include "sysemu/cpus.h"
 #include "sysemu/replay.h"
 
-#include "fuzz/honggfuzz.h"
+#include "fuzz/hfuzz.h"
 
 /* -icount align implementation. */
 
@@ -148,10 +148,10 @@ static inline tcg_target_ulong cpu_tb_exec(CPUState *cpu, TranslationBlock *itb)
     int tb_exit;
     uint8_t *tb_ptr = itb->tc.ptr;
 
-    if (itb->pc == honggfuzz_qemu_entry_point) {
-      honggfuzz_qemu_setup();
+    if (itb->pc == hfuzz_qemu_entry_point) {
+      hfuzz_qemu_setup();
     }
-    honggfuzz_qemu_trace_pc(itb->pc);
+    hfuzz_qemu_trace_pc(itb->pc);
 
     qemu_log_mask_and_addr(CPU_LOG_EXEC, itb->pc,
                            "Trace %d: %p ["
