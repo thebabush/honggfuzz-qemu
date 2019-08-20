@@ -12,6 +12,11 @@ extern void hfuzzInstrumentInit(void);
 void hfuzz_qemu_setup(void) {
   rcu_disable_atfork();
   hfuzzInstrumentInit();
+
+  if (getenv("HFUZZ_INST_LIBS")) {
+    hfuzz_qemu_start_code = 0;
+    hfuzz_qemu_end_code   = (abi_ulong)-1;
+  }
 }
 
 extern void hfuzz_trace_cmp4(uintptr_t pc, uint64_t Arg1, uint64_t Arg2);
