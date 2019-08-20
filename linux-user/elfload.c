@@ -2445,10 +2445,9 @@ static void load_elf_image(const char *image_name, int image_fd,
                 }
                 if (vaddr_ef > info->end_code) {
                     info->end_code = vaddr_ef;
-                    // TODO(babush): this works in AFL's qemu
-                    /*if (!honggfuzz_qemu_end_code) {*/
-                      honggfuzz_qemu_end_code = vaddr;
-                    /*}*/
+                    if (!honggfuzz_qemu_end_code) {
+                      honggfuzz_qemu_end_code = vaddr_ef;
+                    }
                 }
             }
             if (elf_prot & PROT_WRITE) {
