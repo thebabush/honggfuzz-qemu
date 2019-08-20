@@ -133,7 +133,7 @@ QEMU_CFLAGS+=-I$(SRC_PATH)/linux-user/$(TARGET_ABI_DIR) \
 
 obj-y += linux-user/
 obj-y += gdbstub.o thunk.o
-obj-y += fuzz/honggfuzz.o
+obj-y += fuzz/hfuzz.o
 
 endif #CONFIG_LINUX_USER
 
