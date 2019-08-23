@@ -16,5 +16,6 @@ static inline void hfuzz_qemu_trace_pc(abi_ulong pc) {
   hfuzz_trace_pc(pc);
 }
 
+extern void hfuzz_qemu_handle_argv(char **argv);
 
 #endif

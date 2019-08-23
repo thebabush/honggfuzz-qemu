@@ -4,6 +4,8 @@
 
 #include "qemu.h"
 
+#include "fuzz/hfuzz.h"
+
 #define NGROUPS 32
 
 /* ??? This should really be somewhere else.  */
@@ -136,6 +138,8 @@ int loader_exec(int fdexec, const char *filename, char **argv, char **envp,
     bprm->argv = argv;
     bprm->envc = count(envp);
     bprm->envp = envp;
+
+    hfuzz_qemu_handle_argv(argv);
 
     retval = prepare_binprm(bprm);
 
