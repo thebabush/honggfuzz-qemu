@@ -1,6 +1,8 @@
 #ifndef FUZZ_HONGGFUZZ_H
 #define FUZZ_HONGGFUZZ_H
 
+#include "fuzz/config.h"
+
 extern abi_ulong hfuzz_qemu_entry_point;
 extern abi_ulong hfuzz_qemu_start_code;
 extern abi_ulong hfuzz_qemu_end_code;
@@ -16,6 +18,8 @@ static inline void hfuzz_qemu_trace_pc(abi_ulong pc) {
   hfuzz_trace_pc(pc);
 }
 
+#ifdef HFUZZ_FORKSERVER
 extern void hfuzz_qemu_handle_argv(char **argv);
+#endif // HFUZZ_FORKSERVER
 
 #endif
