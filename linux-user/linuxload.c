@@ -139,10 +139,6 @@ int loader_exec(int fdexec, const char *filename, char **argv, char **envp,
     bprm->envc = count(envp);
     bprm->envp = envp;
 
-#ifdef HFUZZ_FORKSERVER
-    hfuzz_qemu_handle_argv(argv);
-#endif // HFUZZ_FORKSERVER
-
     retval = prepare_binprm(bprm);
 
     if(retval>=0) {
